@@ -8,8 +8,7 @@
 <div align='center'>
 Δ-IRIS agent alternatively playing in the environment and its world model
 
-
-
+https://github.com/vmicheli/delta-iris/assets/32040353/ff2dc7a7-fa0a-4338-8f77-1637dff8642d
 
 
 </div>
@@ -40,7 +39,7 @@ By default, logs are synced to [weights & biases](https://wandb.ai), set `wandb.
 python src/main.py env=atari params=atari env.train.id=BreakoutNoFrameskip-v4
 ```
 
-Note that this Atari configuration achieves slightly higher aggregate metrics than those reported in the paper.
+Note that this Atari configuration achieves slightly higher aggregate metrics than those reported in the paper. Here is the [updated table of results](https://github.com/user-attachments/files/16022861/results_atari_updated.pdf).
 
 
 ## Configuration
