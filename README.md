@@ -6,14 +6,11 @@
 **TL;DR** Δ-IRIS is a reinforcement learning agent trained in the imagination of its world model.
 
 <div align='center'>
-Δ-IRIS agent alternatively playing in the environment and its world model
+Δ-IRIS agent alternatively playing in the environment and its world model (download <a href="https://github.com/vmicheli/delta-iris/assets/32040353/ff2dc7a7-fa0a-4338-8f77-1637dff8642d">here</a>)
 
 https://github.com/vmicheli/delta-iris/assets/32040353/ff2dc7a7-fa0a-4338-8f77-1637dff8642d
 
-
 </div>
-
-
 
 
 
