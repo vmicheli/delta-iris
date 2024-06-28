@@ -1,0 +1,15 @@
+defaults:
+  - _self_
+  - env: crafter
+  - params: crafter
+
+wandb:
+  mode: online
+  project: delta-iris
+  entity: null
+  name: null
+  group: null
+  tags: null
+  notes: null
+
+

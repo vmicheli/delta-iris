@@ -1,0 +1,13 @@
+ale-py==0.7.4
+crafter==1.8.3
+einops==0.8.0
+gym[accept-rom-license]==0.21.0
+hydra-core==1.1.1
+matplotlib==3.9.0
+numpy==1.24.1
+opencv-python==4.10.0.84
+pygame==2.1.2
+torch==2.1.2
+torchvision==0.16.2
+tqdm==4.66.4
+wandb==0.17.0

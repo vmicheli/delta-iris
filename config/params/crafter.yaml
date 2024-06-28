@@ -1,0 +1,161 @@
+common:
+  epochs: 1000
+  device: cuda:0
+  do_checkpoint: true
+  seed: null
+  resume: false
+
+initialization:
+  path_to_checkpoint: null
+  load_tokenizer: true
+  load_world_model: true
+  load_actor_critic: true
+
+################################################################################################
+
+collection:
+  path_to_static_dataset: null
+  train:
+    num_envs: 16
+    stop_after_epochs: 991
+    num_episodes_to_save: 10
+    config:
+      epsilon: 0.01
+      should_sample: true
+      temperature: 1.0
+      num_steps: 10000
+      num_steps_first_epoch: 100000
+      burn_in_length: ${params.actor_critic.burn_in_length}
+  test:
+    num_envs: 32
+    num_episodes_to_save: ${params.collection.train.num_episodes_to_save}
+    config:
+      epsilon: 0.0
+      should_sample: true
+      temperature: 1.0
+      num_episodes: 64
+      burn_in_length: ${params.actor_critic.burn_in_length}
+
+training:
+  should: true
+  learning_rate: 0.0001
+  tokenizer:
+    sequence_length: ${..world_model.sequence_length}
+    batch_num_samples: 32
+    grad_acc_steps: 1
+    max_grad_norm: 10.0
+    priority_alpha: 5
+    weight_decay: 0.01
+    start_after_epochs: 0
+    steps_first_epoch: 5000
+    steps_per_epoch: 500
+  world_model:
+    sequence_length: 21
+    batch_num_samples: 32
+    grad_acc_steps: 1
+    max_grad_norm: 10.0
+    priority_alpha: 5
+    weight_decay: 0.01
+    start_after_epochs: 0
+    steps_first_epoch: 2500
+    steps_per_epoch: 500
+  actor_critic:
+    sequence_length: ${eval:'${params.actor_critic.burn_in_length} + 1'}
+    batch_num_samples: 86
+    grad_acc_steps: 1
+    max_grad_norm: 10.0
+    priority_alpha: 5
+    start_after_epochs: 0
+    steps_per_epoch: 500
+
+evaluation:
+  should: true
+  every: 50
+  tokenizer:
+    batch_num_samples: ${params.training.tokenizer.batch_num_samples}
+    start_after_epochs: ${params.training.tokenizer.start_after_epochs}
+    save_reconstructions: true
+  world_model:
+    batch_num_samples: ${params.training.world_model.batch_num_samples}
+    start_after_epochs: ${params.training.world_model.start_after_epochs}
+  actor_critic:
+    num_episodes_to_save: ${params.training.actor_critic.batch_num_samples}
+    start_after_epochs: ${params.training.actor_critic.start_after_epochs}
+
+################################################################################################
+
+tokenizer:
+  _target_: models.tokenizer.TokenizerConfig
+  image_channels: 3
+  image_size: 64
+  num_actions: null
+  num_tokens: 4
+  decoder_act_channels: 4
+  codebook_size: 1024
+  codebook_dim: 64
+  max_codebook_updates_with_revival: 0
+  encoder_config:
+    image_channels: ${eval:'${..image_channels} * 2 + 1'}
+    latent_dim: 64
+    num_channels: 64
+    mult: [1, 1, 2, 2, 4]
+    down: [1, 0, 1, 1, 0]
+  decoder_config:
+    image_channels: ${..image_channels}
+    latent_dim: ${eval:'${..frame_cnn_config.latent_dim} + ${..decoder_act_channels} + ${..encoder_config.latent_dim}'}
+    num_channels: 64
+    mult: [1, 1, 2, 2, 4]
+    down: [1, 0, 1, 1, 0]
+  frame_cnn_config:
+    image_channels: ${..image_channels}
+    latent_dim: 8
+    num_channels: 64
+    mult: [1, 1, 2, 2, 4]
+    down: [1, 0, 1, 1, 0]
+
+world_model:
+  _target_: models.world_model.WorldModelConfig
+  latent_vocab_size: ${params.tokenizer.codebook_size}
+  num_actions: null
+  image_channels: ${params.tokenizer.image_channels}
+  image_size: ${params.tokenizer.image_size}
+  latents_weight: 1.0
+  rewards_weight: 1.0
+  ends_weight: 1.0
+  two_hot_rews: true
+  transformer_config:
+    _target_: models.transformer.TransformerConfig
+    tokens_per_block: ${eval:'1 + 1 + 4'}
+    max_blocks: ${params.training.world_model.sequence_length}
+    num_layers: 3
+    num_heads: 8
+    embed_dim: 512
+    attention: causal
+    embed_pdrop: 0.0
+    resid_pdrop: 0.0
+    attn_pdrop: 0.0
+  frame_cnn_config:
+    image_channels: ${..image_channels}
+    latent_dim: 8
+    num_channels: 32
+    mult: [1, 1, 2, 2, 4]
+    down: [1, 0, 1, 1, 0]
+
+actor_critic:
+  _target_: models.actor_critic.ActorCriticConfig
+  burn_in_length: 5
+  imagination_horizon: 15
+  gamma: 0.997
+  lambda_: 0.95
+  entropy_weight: 0.001
+  two_hot_rets: true
+  model:
+    _target_: models.actor_critic.CnnLstmActorCritic
+    frame_encoder_config:
+      image_channels: 3
+      latent_dim: 16
+      num_channels: 32
+      mult: [1, 1, 2, 2, 4]
+      down: [1, 0, 1, 1, 0]
+    num_actions: null
+    two_hot_rets: ${..two_hot_rets}
