@@ -1,6 +1,6 @@
 # Efficient World Models with Context-Aware Tokenization (Δ-IRIS)
 
-[Efficient World Models with Context-Aware Tokenization](https://openreview.net/forum?id=BiWIERWBFX) <br>
+[Efficient World Models with Context-Aware Tokenization](https://arxiv.org/abs/2406.19320) <br>
 [Vincent Micheli](https://vmicheli.github.io)\*, [Eloi Alonso](https://eloialonso.github.io)\*, [François Fleuret](https://fleuret.org/francois/) <br>
 
 **TL;DR** Δ-IRIS is a reinforcement learning agent trained in the imagination of its world model.
