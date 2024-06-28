@@ -5,7 +5,6 @@ outputs
 checkpoints
 media
 experiments
-data
 slurm*
 .DS_Store
 
@@ -116,7 +115,6 @@ celerybeat.pid
 .env
 .venv
 venv/
-ENV/
 env.bak/
 venv.bak/
 

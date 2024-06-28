@@ -1,0 +1,10 @@
+train:
+  _target_: gym.wrappers.TimeLimit
+  max_episode_steps: 10000
+  env:
+    _target_: crafter.Env
+    reward: true
+
+test: ${.train}
+
+keymap: crafter
