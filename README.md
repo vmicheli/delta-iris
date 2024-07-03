@@ -106,9 +106,10 @@ outputs/YYYY-MM-DD/hh-mm-ss/
 
 ## Pretrained agent
 
-An agent checkpoint (Crafter 5M frames) is available [here](https://drive.google.com/file/d/16qBdJA2OvKd-5OgS9IX8Qxkos9QhhK4_/view?usp=sharing).
+An agent checkpoint (Crafter 5M frames) is available on the [Hugging Face Hub](https://huggingface.co/vmicheli/delta-iris).
 
 To visualize the agent or play in its world model:
+- Download the checkpoint `last.pt`
 - Create a `checkpoints` directory
 - Copy the checkpoint to `checkpoints/last.pt`
 - Run `./scripts/play.sh` with the flags of your choice as described above.
